@@ -1,0 +1,1951 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cicle: el Regreso</title>
+  
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#2a1b4e">
+  <link rel="icon" id="favicon" href="">
+  <link rel="apple-touch-icon" id="touchIcon" href="">
+  <script>try{if(localStorage.getItem('cicle_pin_on')==='1')document.documentElement.classList.add('locked')}catch(e){}</script>
+  
+  <!-- Enlace al archivo manifest para que Android lo reconozca como App -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Google Fonts: Lexend -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Tema por defecto: Lila / Morado con fondo blanco suave */
+      --bg: #faf8f5;
+      --card-bg: #ffffff;
+      --input-bg: #f5f3ff;
+      --text: #2e1065;
+      --muted: #7c3aed;
+      --border: #ddd6fe;
+      --primary: #8b5cf6;
+      --primary-hover: #7c3aed;
+      --primary-active: #6d28d9;
+      --tag-bg: #ede9fe;
+      --tag-text: #5b21b6;
+      --progress-bg: #ddd6fe;
+      --period-day: #8b5cf6;
+      --predicted-day: #c4b5fd;
+    }
+
+    /* Temas Preset */
+    body.theme-rosa {
+      --bg: #fdf8f9;
+      --card-bg: #ffffff;
+      --input-bg: #f8ecee;
+      --text: #2d2327;
+      --muted: #8c737c;
+      --border: #f0d8df;
+      --primary: #d96b82;
+      --primary-hover: #c4526a;
+      --primary-active: #a83d54;
+      --tag-bg: #fbebf0;
+      --tag-text: #b03a54;
+      --progress-bg: #f0d8df;
+      --period-day: #e25b75;
+      --predicted-day: #f4b4c1;
+    }
+
+    body.theme-menta {
+      --bg: #f4fbf7;
+      --card-bg: #ffffff;
+      --input-bg: #e6f4ed;
+      --text: #133e2b;
+      --muted: #4a7c59;
+      --border: #c8e6d5;
+      --primary: #2d9d78;
+      --primary-hover: #237a5d;
+      --primary-active: #195843;
+      --tag-bg: #d1ebd9;
+      --tag-text: #195843;
+      --progress-bg: #c8e6d5;
+      --period-day: #2d9d78;
+      --predicted-day: #82d6b7;
+    }
+
+    body.theme-atardecer {
+      --bg: #fdfaf6;
+      --card-bg: #ffffff;
+      --input-bg: #fef0e7;
+      --text: #431407;
+      --muted: #9a3412;
+      --border: #ffedd5;
+      --primary: #f97316;
+      --primary-hover: #ea580c;
+      --primary-active: #c2410c;
+      --tag-bg: #ffedd5;
+      --tag-text: #9a3412;
+      --progress-bg: #fed7aa;
+      --period-day: #f97316;
+      --predicted-day: #fdba74;
+    }
+
+    body.theme-oscuro, body.dark-mode {
+      --bg: #120e16;
+      --card-bg: #1e1726;
+      --input-bg: #291f33;
+      --text: #f3e8ff;
+      --muted: #a78bfa;
+      --border: #3b2d54;
+      --primary: #a78bfa;
+      --primary-hover: #8b5cf6;
+      --primary-active: #7c3aed;
+      --tag-bg: #3b2d54;
+      --tag-text: #ddd6fe;
+      --progress-bg: #3b2d54;
+      --period-day: #8b5cf6;
+      --predicted-day: #5b21b6;
+    }
+
+    body.spooky-theme {
+      --primary: #a855f7;
+      --primary-hover: #9333ea;
+      --primary-active: #7e22ce;
+      --border: #4c1d95;
+      --period-day: #9333ea;
+      --predicted-day: #d8b4fe;
+    }
+    body.spooky-theme .card, body.spooky-theme .square-card, body.spooky-theme .banner-image-container {
+      box-shadow: 0 0 14px rgba(147, 51, 234, 0.25);
+      border-color: #581c87;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Lexend', system-ui, sans-serif !important;
+      transition: background 0.25s, color 0.25s, border-color 0.25s, transform 0.1s, box-shadow 0.2s;
+    }
+
+    body {
+      background: var(--bg);
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: var(--text);
+      padding: 24px;
+      padding-top: 80px;
+      max-width: 1100px;
+      margin: auto;
+      position: relative;
+    }
+
+    .top-floating-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 24px;
+      z-index: 900;
+    }
+    body.theme-oscuro .top-floating-bar, body.dark-mode .top-floating-bar {
+      background: rgba(30, 23, 38, 0.88);
+    }
+
+    .top-brand {
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: var(--primary);
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    button, .filter-btn, .view-btn, .tab-btn, .theme-toggle, .menu-btn, .file-label-btn {
+      cursor: pointer;
+      user-select: none;
+    }
+    button:active, .filter-btn:active, .view-btn:active, .tab-btn:active, .theme-toggle:active, .menu-btn:active, .file-label-btn:active {
+      transform: scale(0.96);
+      filter: brightness(0.92);
+    }
+
+    header { margin-bottom: 20px; }
+
+    .header-titles h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1.1;
+      letter-spacing: -0.5px;
+    }
+
+    .header-titles .subtitle {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .theme-toggle, .menu-btn {
+      background: var(--card-bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .theme-toggle:hover, .menu-btn:hover { border-color: var(--primary); }
+
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      display: none;
+      z-index: 1000;
+    }
+    .drawer {
+      position: fixed;
+      top: 0;
+      right: -390px;
+      width: 370px;
+      max-width: 90vw;
+      height: 100%;
+      background: var(--card-bg);
+      border-left: 1px solid var(--border);
+      box-shadow: -6px 0 20px rgba(0,0,0,0.2);
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 1001;
+      transition: right 0.3s ease;
+      overflow-y: auto;
+    }
+    .drawer.open { right: 0; }
+
+    .drawer h3 {
+      color: var(--primary);
+      font-size: 1.3rem;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .drawer-close {
+      background: transparent;
+      border: none;
+      font-size: 1.3rem;
+      color: var(--muted);
+    }
+    .drawer-section { margin-bottom: 18px; }
+    .drawer-section label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .drawer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .drawer-links a {
+      color: var(--text);
+      text-decoration: none;
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+    }
+    .drawer-links a:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .css-editor-toggle {
+      width: 100%;
+      text-align: left;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .css-editor-box {
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 8px;
+      background: var(--input-bg);
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .css-editor-box.active { display: flex; }
+    .css-editor-box textarea {
+      font-family: monospace !important;
+      font-size: 0.8rem;
+      min-height: 110px;
+      background: var(--card-bg);
+      color: var(--text);
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      resize: vertical;
+    }
+
+    .card {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      margin-bottom: 20px;
+    }
+
+    h2 { font-size: 1.25rem; margin-bottom: 14px; font-weight: 700; }
+    h3 { font-size: 1.05rem; margin-bottom: 10px; font-weight: 600; }
+
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 3px;
+      text-align: center;
+    }
+    .cal-day-name {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--muted);
+      padding: 4px 0;
+    }
+    .cal-cell {
+      background: var(--input-bg);
+      border-radius: 6px;
+      padding: 4px 2px;
+      min-height: 48px;
+      font-size: 0.75rem;
+      border: 1px solid var(--border);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      overflow: hidden;
+    }
+    .cal-cell:hover { border-color: var(--primary); }
+    .cal-cell.empty { background: transparent; border: none; }
+    .cal-cell.is-period {
+      background: var(--period-day);
+      color: #ffffff;
+      border-color: var(--period-day);
+      font-weight: 700;
+    }
+    .cal-cell.is-predicted {
+      background: var(--predicted-day);
+      color: #ffffff;
+      border-color: var(--predicted-day);
+    }
+    .cal-cell.has-log::after {
+      content: '•';
+      color: var(--primary);
+      position: absolute;
+      bottom: 2px;
+      font-size: 1.2rem;
+    }
+    .cal-cell.is-period.has-log::after { color: #ffffff; }
+
+    .quick-period-btn {
+      font-size: 8px;
+      padding: 1px 2px;
+      border-radius: 3px;
+      background: rgba(255,255,255,0.4);
+      border: none;
+      color: currentColor;
+      margin-top: 1px;
+      white-space: nowrap;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 12px;
+        padding-top: 72px;
+      }
+      .card {
+        padding: 12px;
+      }
+      .cal-day-name {
+        font-size: 0.7rem;
+      }
+      .quick-period-btn {
+        font-size: 7px;
+        padding: 1px;
+      }
+    }
+
+    .legend-bar {
+      display: flex;
+      gap: 16px;
+      margin-top: 12px;
+      font-size: 0.8rem;
+      flex-wrap: wrap;
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-color { width: 14px; height: 14px; border-radius: 4px; }
+
+    .weekly-image-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+      align-items: stretch;
+    }
+    @media (max-width: 750px) { .weekly-image-grid { grid-template-columns: 1fr; } }
+
+    .square-card {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 260px;
+    }
+    .mini-metrics-row { display: flex; gap: 10px; margin-bottom: 12px; }
+    .compact-stat-box {
+      flex: 1;
+      background: var(--input-bg);
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+    .compact-stat-box span {
+      display: block;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .compact-stat-box label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .banner-image-container {
+      background: var(--card-bg);
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 260px;
+      overflow: hidden;
+    }
+    .banner-image-container img {
+      width: 100%;
+      height: 100%;
+      max-height: 240px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    form { display: flex; flex-direction: column; gap: 12px; }
+    .form-group { display: flex; flex-direction: column; gap: 4px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+    label { font-size: 0.8rem; color: var(--muted); font-weight: 600; }
+    
+    input, select, textarea, button {
+      padding: 9px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--text);
+      outline: none;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--primary); }
+    textarea { resize: vertical; min-height: 65px; }
+
+    .file-input-wrapper { display: flex; align-items: center; gap: 8px; }
+    .file-label-btn {
+      display: inline-block;
+      padding: 8px 12px;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text);
+      text-align: center;
+    }
+    .file-label-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+    /* Contenedor y Chips de Síntomas con gestión (Editar/Eliminar) */
+    .chip-container { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+    .chip {
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      padding: 6px 10px 6px 12px;
+      border-radius: 16px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .chip.selected {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+    .chip-remove {
+      font-size: 0.9rem;
+      line-height: 1;
+      padding: 0 2px;
+      border-radius: 50%;
+      color: inherit;
+      opacity: 0.7;
+    }
+    .chip-remove:hover {
+      opacity: 1;
+      background: rgba(0,0,0,0.15);
+    }
+
+    .add-symptom-box {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .add-symptom-box input {
+      flex: 1;
+      font-size: 0.8rem;
+    }
+
+    button.submit-btn, button.btn-action {
+      background: var(--primary);
+      color: #ffffff;
+      font-weight: 700;
+      border: none;
+    }
+    button.submit-btn:hover, button.btn-action:hover { background: var(--primary-hover); }
+    button.btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    button.btn-danger-solid {
+      background: #e57373;
+      color: #fff;
+      border: none;
+      font-weight: 700;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 1050;
+    }
+    .modal-content {
+      background: var(--card-bg);
+      padding: 24px;
+      border-radius: 14px;
+      max-width: 520px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    .pain-location-card {
+      background: var(--input-bg);
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin-top: 8px;
+    }
+
+    .med-summary-item {
+      background: var(--input-bg);
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    /* --- Reporte, PIN y lock --- */
+    #reportView{display:none;position:fixed;inset:0;z-index:2000;background:#fff;color:#2e1065;overflow:auto;padding:20px}
+    #reportView.open{display:block}
+    .rv-bar,.rv-opts{display:flex;gap:10px;flex-wrap:wrap;align-items:center;max-width:820px;margin:0 auto 14px}
+    .rv-opts label{font-size:.85rem;display:flex;gap:6px;align-items:center}
+    .rv-opts input:not([type=checkbox]),.rv-opts select{padding:8px 10px;border:1px solid #ddd6fe;border-radius:8px;background:#fff;color:#2e1065;font-size:.85rem}
+    #rvBody{max-width:820px;margin:0 auto;line-height:1.5}
+    #rvBody h1{color:#6d28d9;border-bottom:2px solid #ddd6fe;padding-bottom:8px;margin-bottom:4px;font-size:1.5rem}
+    #rvBody h2{color:#4c1d95;margin-top:22px;font-size:1.05rem;border-bottom:1px solid #eee;padding-bottom:4px}
+    #rvBody .meta{font-size:.85rem;color:#555}
+    #rvBody .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+    #rvBody .sc{background:#f5f3ff;border:1px solid #ddd6fe;padding:10px;border-radius:8px}
+    #rvBody .sc b{display:block;font-size:.7rem;text-transform:uppercase;color:#6d28d9}
+    #rvBody .sc span{font-size:1.05rem;font-weight:700;color:#4c1d95}
+    #rvBody ul{padding-left:20px;margin-top:8px}
+    #rvBody li{font-size:.9rem;margin-bottom:4px}
+    #rvBody table{width:100%;border-collapse:collapse;margin-top:8px}
+    #rvBody th,#rvBody td{border:1px solid #ddd;padding:6px 8px;text-align:left;font-size:.82rem}
+    #rvBody th{background:#f5f3ff;color:#4c1d95}
+    #rvBody .c{text-align:center;color:#888}
+    #rvBody .foot{margin-top:24px;font-size:.75rem;color:#666;border-top:1px solid #eee;padding-top:8px}
+    @media print{body>*:not(#reportView){display:none!important}#reportView{position:static;padding:0;overflow:visible}.rv-bar,.rv-opts{display:none}}
+    #lockScreen{display:none;position:fixed;inset:0;z-index:5000;background:var(--bg);color:var(--text);flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center}
+    html.locked #lockScreen{display:flex}
+    html.locked body{overflow:hidden}
+    #pinModal{display:none;position:fixed;inset:0;z-index:4000;background:rgba(0,0,0,.55);align-items:center;justify-content:center;padding:16px}
+    .pin-in{width:190px;text-align:center;font-size:1.4rem;letter-spacing:.4rem;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--input-bg);color:var(--text)}
+  </style>
+  <style id="customUserSkinStyle"></style>
+</head>
+<body>
+
+  <!-- Barra Superior Flotante -->
+  <div class="top-floating-bar">
+    <a href="#" class="top-brand" id="brand">Cicle</a>
+    <div style="display: flex; gap: 8px; align-items: center;">
+      <button class="theme-toggle" id="floatingThemeBtn" onclick="toggleTheme()">🌙</button>
+      <button class="menu-btn" onclick="toggleDrawer(true)">☰ Menú</button>
+    </div>
+  </div>
+
+  <header>
+    <div class="header-titles">
+      <h1 id="heading">El Regreso</h1>
+      <p class="subtitle" id="subtitle">Otro ciclo menos, fuerza leona.</p>
+    </div>
+  </header>
+
+  <!-- Drawer / Menú Hamburguesa -->
+  <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer(false)"></div>
+  <div class="drawer" id="sideDrawer">
+    <div>
+      <h3>
+        <span>Opciones</span>
+        <button class="drawer-close" onclick="toggleDrawer(false)">✕</button>
+      </h3>
+
+      <!-- Selección de Tema / Paleta de Colores -->
+      <div class="drawer-section">
+        <label>Tema de Colores</label>
+        <select id="themeSelect" onchange="changeThemePreset(this.value)" style="width: 100%;">
+          <option value="default">💜 Lila & Morado (Default)</option>
+          <option value="rosa">🌸 Rosa Soft</option>
+          <option value="menta">🌿 Verde Menta</option>
+          <option value="atardecer">🌅 Atardecer Cálido</option>
+          <option value="oscuro">🌙 Noche Profunda</option>
+        </select>
+      </div>
+
+      <!-- Atajos -->
+      <div class="drawer-section">
+        <label>Atajos</label>
+        <div class="drawer-links">
+          <a href="#calendarSection" onclick="toggleDrawer(false)">📅 Calendario & Predicción</a>
+          <a href="#metricsSection" onclick="toggleDrawer(false)">📊 Estado del Ciclo</a>
+          <a href="#logSection" onclick="toggleDrawer(false)">📝 Registro Diario</a>
+          <a href="#medicationSection" onclick="toggleDrawer(false)">💊 Medicamento</a>
+          <a href="#medSummarySection" onclick="toggleDrawer(false)">Resumen Mensual Medicamentos</a>
+        </div>
+      </div>
+
+      <!-- Ajustes de Duración -->
+      <div class="drawer-section">
+        <label>Ajustes</label>
+        <div class="form-group">
+          <label>Duración de Sangrado</label>
+          <input type="number" id="periodLengthInput" min="1" max="15" value="5" onchange="updateCycleSettings()">
+        </div>
+        <p style="font-size: 0.75rem; color: var(--muted); margin-top: 4px;">El promedio del ciclo completo se calcula solo según tus registros.</p>
+      </div>
+
+      <!-- Textos, ícono y seguridad -->
+      <div class="drawer-section">
+        <label>Textos de la App</label>
+        <div class="form-group"><label>Título (barra superior)</label><input id="tTitle" placeholder="Cicle" oninput="saveTexts()"></div>
+        <div class="form-group"><label>Encabezado</label><input id="tHeading" placeholder="El Regreso" oninput="saveTexts()"></div>
+        <div class="form-group"><label>Subtítulo</label><input id="tSubtitle" placeholder="Otro ciclo menos, fuerza leona." oninput="saveTexts()"></div>
+        <button class="btn-secondary" style="width:100%;font-size:.8rem;" onclick="resetTexts()">Restaurar textos originales</button>
+      </div>
+
+      <div class="drawer-section">
+        <label>Ícono de la App</label>
+        <div class="form-group"><label>Emoji</label><input id="iconEmoji" maxlength="8" placeholder="🦇" oninput="setEmoji(this.value)"></div>
+        <div style="display:flex;gap:8px;align-items:center;margin-top:6px;">
+          <label class="file-label-btn" style="flex:1;">📁 Subir imagen<input type="file" accept="image/png,image/jpeg,image/webp" style="display:none" onchange="uploadIcon(event)"></label>
+          <button class="btn-secondary" style="font-size:.8rem" onclick="clearIcon()">Quitar</button>
+        </div>
+        <p style="font-size:.72rem;color:var(--muted);margin-top:6px;">Cambia el ícono de la pestaña. El de la pantalla de inicio sale de los archivos icon-192.png e icon-512.png.</p>
+      </div>
+
+      <div class="drawer-section">
+        <label>Seguridad</label>
+        <p id="pinStatus" style="font-size:.8rem;color:var(--muted);margin-bottom:6px;"></p>
+        <button class="btn-secondary" style="width:100%;" id="pinToggleBtn" onclick="togglePin()">🔒 Activar PIN</button>
+        <button class="btn-secondary" style="width:100%;margin-top:6px;" id="pinChangeBtn" onclick="changePin()">Cambiar PIN</button>
+        <p style="font-size:.72rem;color:var(--muted);margin-top:6px;">Protege de miradas casuales; no cifra los datos. Exporta un respaldo antes de activarlo.</p>
+      </div>
+
+      <!-- Personalización de Imágenes -->
+      <div class="drawer-section">
+        <label>Imágenes del Sistema</label>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div>
+            <span style="font-size: 0.8rem; color: var(--muted);">Fondo General:</span>
+            <div class="file-input-wrapper" style="margin-top: 4px;">
+              <label class="file-label-btn" style="flex: 1;">
+                📁 Subir Fondo
+                <input type="file" id="bgFileInput" accept="image/png, image/jpeg, image/webp" style="display: none;" onchange="handleBgUpload(event)">
+              </label>
+              <button class="btn-secondary" style="font-size: 0.8rem;" onclick="removeCustomBackground()">Quitar</button>
+            </div>
+          </div>
+
+          <div>
+            <span style="font-size: 0.8rem; color: var(--muted);">Banner de Resumen:</span>
+            <div class="file-input-wrapper" style="margin-top: 4px;">
+              <label class="file-label-btn" style="flex: 1;">
+                📁 Subir Banner
+                <input type="file" id="bannerFileInput" accept="image/png, image/jpeg, image/webp" style="display: none;" onchange="handleBannerUpload(event)">
+              </label>
+              <button class="btn-secondary" style="font-size: 0.8rem;" onclick="resetBannerImage()">Default</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Efectos & Skins -->
+      <div class="drawer-section">
+        <label>Efectos & Skins</label>
+        <button class="btn-secondary" style="width: 100%; margin-bottom: 8px;" onclick="toggleSpookyTheme()" id="spookyThemeBtn">🎃 Activar Modo Spooky</button>
+        
+        <button class="css-editor-toggle" onclick="toggleCssEditor()">
+          <span>🎨 Editor CSS / Custom Skin</span>
+          <span id="cssToggleIcon">▼</span>
+        </button>
+        <div class="css-editor-box" id="cssEditorBox">
+          <textarea id="customCssTextarea" placeholder="/* CSS personalizado */&#10;:root {&#10;  --primary: #8b5cf6;&#10;}"></textarea>
+          <div style="display: flex; gap: 6px;">
+            <button class="btn-action" style="flex: 1; font-size: 0.8rem;" onclick="saveCustomCss()">Aplicar CSS</button>
+            <button class="btn-secondary" style="flex: 1; font-size: 0.8rem;" onclick="clearCustomCss()">Limpiar</button>
+          </div>
+        </div>
+
+        <button class="btn-secondary" style="width: 100%; margin-top: 8px;" onclick="resetCustomization()">↺ Resetear Toda Personalización</button>
+      </div>
+
+      <!-- Reporte & Respaldo -->
+      <div class="drawer-section">
+        <label>Reporte & Respaldo</label>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <button class="btn-action" style="width:100%;font-size:0.85rem;" onclick="openReport()">📄 Ver Reporte para Consulta</button>
+          <div style="display:flex;gap:6px;margin-top:4px;">
+            <button class="btn-secondary" style="flex:1;" onclick="exportData()">⬇ JSON</button>
+            <button class="btn-secondary" style="flex:1;" onclick="document.getElementById('importFileInput').click()">⬆ JSON</button>
+            <input type="file" id="importFileInput" accept=".json" style="display:none;" onchange="importData(event)">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Borrar Todos los Datos -->
+    <div style="border-top: 1px solid var(--border); padding-top: 14px;">
+      <button class="btn-danger-solid" style="width: 100%;" onclick="openDeleteDataModal()">🗑️ Borrar Todos los Datos</button>
+    </div>
+  </div>
+
+  <!-- 1. CALENDARIO CON REGISTRO RÁPIDO DE PERIODOS ANTERIORES -->
+  <div class="card" id="calendarSection">
+    <div class="calendar-header">
+      <button class="btn-secondary" onclick="changeMonth(-1)">◀ Anterior</button>
+      <h2 id="currentMonthYearLabel" style="margin: 0;">Mes Año</h2>
+      <button class="btn-secondary" onclick="changeMonth(1)">Siguiente ▶</button>
+    </div>
+    
+    <div class="calendar-grid" id="calendarGrid"></div>
+
+    <div class="legend-bar">
+      <div class="legend-item"><div class="legend-color" style="background: var(--period-day);"></div> Sangrado / Periodo</div>
+      <div class="legend-item"><div class="legend-color" style="background: var(--predicted-day);"></div> Próximo periodo estimado</div>
+      <div class="legend-item"><span style="color: var(--primary); font-weight: bold;">•</span> Contiene datos registrados</div>
+    </div>
+  </div>
+
+  <!-- 2. RESUMEN Y ESTADO DEL CICLO -->
+  <div class="weekly-image-grid" id="metricsSection">
+    <div class="square-card">
+      <div>
+        <h2>Estado de tu Ciclo</h2>
+        <div class="mini-metrics-row">
+          <div class="compact-stat-box">
+            <label>Promedio Ciclo</label>
+            <span id="avgCycleSpan">28 días</span>
+          </div>
+          <div class="compact-stat-box">
+            <label>Días Sangrado</label>
+            <span id="periodLengthSpan">5 días</span>
+          </div>
+        </div>
+        <div class="compact-stat-box" style="margin-top: 8px;">
+          <label>Próximo Periodo Est.</label>
+          <span id="nextPeriodSpan" style="font-size: 1rem;">Calculando...</span>
+        </div>
+      </div>
+      <div style="margin-top: 14px; font-size: 0.85rem; color: var(--muted);">
+        <p id="cyclePhaseText">☆</p>
+      </div>
+    </div>
+
+    <div class="banner-image-container" style="display:flex;align-items:center;justify-content:center;">
+      <img id="customBannerImg" alt="Banner Ilustrativo" style="display:none;">
+      <span id="bannerPh" style="font-size:4rem;">🦇</span>
+    </div>
+  </div>
+
+  <!-- 3. REGISTRO DIARIO (APARECE PRIMERO) -->
+  <div class="card" id="logSection">
+    <h2 id="logFormTitle">Registro del Día: <span id="selectedDateLabel"></span></h2>
+    <form id="dailyLogForm">
+      <input type="hidden" id="logDate">
+
+      <!-- Sangrado -->
+      <div class="form-group">
+        <label>Intensidad de Sangrado</label>
+        <select id="flowBleeding">
+          <option value="">-- Sin seleccionar --</option>
+          <option value="none">Sin sangrado</option>
+          <option value="spotting">Manchado ligero</option>
+          <option value="light">Flujo ligero</option>
+          <option value="medium">Flujo moderado</option>
+          <option value="heavy">Flujo abundante</option>
+        </select>
+      </div>
+
+      <!-- Flujo Cervical -->
+      <div class="form-group">
+        <label>Tipo de Flujo</label>
+        <select id="fluidType">
+          <option value="">-- Sin seleccionar --</option>
+          <option value="dry">Seco</option>
+          <option value="sticky">Pegajoso o grumoso</option>
+          <option value="creamy">Cremoso</option>
+          <option value="egg_white">Tipo clara de huevo (Elástico)</option>
+          <option value="watery">Acuoso / Transparente</option>
+        </select>
+      </div>
+
+      <!-- Energía y Mood -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nivel de Energía</label>
+          <select id="energyLevel">
+            <option value="">-- Sin seleccionar --</option>
+            <option value="high">Mucha energía ⚡</option>
+            <option value="normal">Normal</option>
+            <option value="low">Poca energía</option>
+            <option value="exhausted">Muy cansada / Agotada</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Estado de Ánimo</label>
+          <select id="moodState">
+            <option value="">-- Sin seleccionar --</option>
+            <option value="calm">Tranquila</option>
+            <option value="happy">Alegre</option>
+            <option value="sensitive">Sensible</option>
+            <option value="anxious">Ansiosa</option>
+            <option value="irritable">Irritable / Molesta</option>
+            <option value="sad">Triste</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Dolor por Zona -->
+      <div class="form-group">
+        <label>Registro de Dolor</label>
+        <div id="painLocationsContainer"></div>
+        <button type="button" class="btn-secondary" style="margin-top: 6px;" onclick="addPainLocation()">+ Agregar Zona con Dolor</button>
+      </div>
+
+      <!-- Síntomas Modificables y Eliminables -->
+      <div class="form-group">
+        <label>Síntomas (Selecciona los que sientas hoy / Doble clic para editar):</label>
+        <div class="chip-container" id="symptomsChips"></div>
+        
+        <div class="add-symptom-box">
+          <input type="text" id="newSymptomInput" placeholder="Escribe un nuevo síntoma...">
+          <button type="button" class="btn-secondary" style="font-size: 0.8rem;" onclick="addNewSymptom()">+ Agregar</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Notas adicionales</label>
+        <textarea id="logNotes" placeholder="Escribe cualquier detalle del día..."></textarea>
+      </div>
+
+      <button type="submit" class="btn-action">Guardar Registro del Día</button>
+    </form>
+  </div>
+
+  <!-- 4. CONTROL DE TOMA DE MEDICAMENTO -->
+  <div class="card" id="medicationSection">
+    <h2>💊 Registro de Toma de Medicamento</h2>
+    <form id="medForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Medicamento</label>
+          <input type="text" id="medName" value="Ibuprofeno" required>
+        </div>
+        <div class="form-group">
+          <label>Dosis (mg)</label>
+          <select id="medDose">
+            <option value="200">200 mg</option>
+            <option value="400" selected>400 mg</option>
+            <option value="600">600 mg</option>
+            <option value="800">800 mg</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Hora de Toma</label>
+          <input type="time" id="medTime" required>
+        </div>
+        <div class="form-group">
+          <label>¿Cada cuántas horas tomarás la siguiente?</label>
+          <select id="medInterval">
+            <option value="6">Cada 6 horas</option>
+            <option value="8" selected>Cada 8 horas</option>
+            <option value="12">Cada 12 horas</option>
+          </select>
+        </div>
+      </div>
+      <button type="submit" class="btn-action">Registrar Toma de Medicamento</button>
+    </form>
+
+    <div id="medStatusBox" style="margin-top: 14px; padding: 12px; background: var(--input-bg); border-radius: 8px; border: 1px solid var(--border);">
+      <p style="font-size: 0.9rem; font-weight: 600;" id="nextDoseText">Sin tomas registradas hoy.</p>
+    </div>
+  </div>
+
+  <!-- 5. RESUMEN MENSUAL DE MEDICAMENTOS -->
+  <div class="card" id="medSummarySection">
+    <h2>Resumen Mensual de Medicamentos</h2>
+    <div style="display: flex; gap: 10px; margin-bottom: 14px; align-items: center;">
+      <label style="margin: 0;">Filtrar Mes:</label>
+      <input type="month" id="medMonthFilter" onchange="renderMedSummary()" style="max-width: 200px;">
+    </div>
+    <div id="medSummaryContainer"></div>
+  </div>
+
+  <!-- Modal Borrar Datos -->
+  <div class="modal-overlay" id="deleteDataModal" onclick="closeModal(event, 'deleteDataModal')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <h3 style="color: #e57373;">⚠️ ¿Borrar todos los datos?</h3>
+      <p style="font-size: 0.9rem; color: var(--muted); margin: 12px 0;">
+        Esta acción eliminará todos tus registros del ciclo menstrual, síntomas, medicamentos e imágenes guardadas. No se puede deshacer.
+      </p>
+      <div style="display: flex; gap: 8px; margin-top: 16px;">
+        <button class="btn-danger-solid" style="flex: 1;" onclick="confirmClearAllData()">Sí, borrar todo</button>
+        <button class="btn-secondary" style="flex: 1;" onclick="document.getElementById('deleteDataModal').style.display='none'">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reporte para consulta (vista dentro de la app) -->
+  <div id="reportView">
+    <div class="rv-bar">
+      <button class="btn-action" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
+      <button class="btn-secondary" onclick="closeReport()">✕ Cerrar</button>
+    </div>
+    <div class="rv-opts">
+      <label>Rango
+        <select id="rvRange" onchange="renderReport()">
+          <option value="3">Últimos 3 meses</option><option value="6" selected>Últimos 6 meses</option>
+          <option value="12">Últimos 12 meses</option><option value="0">Todo el historial</option>
+        </select>
+      </label>
+      <label><input type="checkbox" id="rvNotes" onchange="renderReport()"> Incluir notas diarias</label>
+      <input id="rvName" placeholder="Nombre (opcional)" oninput="renderReport()">
+      <input id="rvReason" placeholder="Motivo de consulta (opcional)" oninput="renderReport()">
+    </div>
+    <div id="rvBody"></div>
+  </div>
+
+  <!-- PIN -->
+  <div id="pinModal">
+    <div class="modal-content" style="text-align:center;">
+      <h3 id="pinTitle">PIN</h3>
+      <input id="pinInput" class="pin-in" type="password" inputmode="numeric" maxlength="6" autocomplete="off" onkeydown="if(event.key==='Enter')pinOk()">
+      <div style="display:flex;gap:8px;margin-top:16px;">
+        <button class="btn-action" style="flex:1;" onclick="pinOk()">Aceptar</button>
+        <button class="btn-secondary" style="flex:1;" onclick="pinCancel()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+  <div id="lockScreen">
+    <div style="font-size:3rem;">🦇</div>
+    <h2 id="lockTitle">Cicle</h2>
+    <input id="lockInput" class="pin-in" type="password" inputmode="numeric" maxlength="6" placeholder="PIN" autocomplete="off" onkeydown="if(event.key==='Enter')tryUnlock()">
+    <p id="lockMsg" style="color:#e57373;font-size:.85rem;min-height:1.2em;"></p>
+    <button class="btn-action" onclick="tryUnlock()">Entrar</button>
+    <button class="btn-secondary" style="font-size:.8rem;" onclick="forgotPin()">Olvidé mi PIN</button>
+  </div>
+
+  <script>
+    // --- ESTADO GLOBAL Y CONFIGURACIONES ---
+
+    const $ = id => document.getElementById(id);
+    const esc = x => String(x ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const ls = (k, v) => { try { localStorage.setItem(k, v); } catch (e) { alert('No se pudo guardar (¿imagen muy pesada?).'); } };
+    const ymd = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const todayStr = () => ymd(new Date());
+    const addDays = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+    const dayDiff = (a, b) => Math.round((a - b) / 864e5);
+    let logs = JSON.parse(localStorage.getItem('cicle_logs_v2')) || {};
+    let medLogs = JSON.parse(localStorage.getItem('cicle_meds_v2')) || [];
+    let periodLength = Number(localStorage.getItem('cicle_period_length')) || 5;
+    
+    // Lista predeterminada de síntomas
+    const defaultSymptomsList = [
+      "Cólicos", "Hinchazón", "Sensibilidad en senos", "Dolor de cabeza", 
+      "Acné / Granitos", "Antojos", "Dolor en la pelvis", 
+      "Dolor en relaciones sexuales", "Dolor al defecar", "Dolor al orinar", 
+      "Cansancio constante", "Náuseas / Estómago revuelto", "Dolor hacia piernas / ciática"
+    ];
+    let availableSymptoms = JSON.parse(localStorage.getItem('cicle_symptoms_list')) || defaultSymptomsList;
+
+    let selectedTheme = localStorage.getItem('cicle_theme_preset') || 'default';
+    let isDarkMode = localStorage.getItem('cicle_theme_dark') === 'true';
+    let isSpookyTheme = localStorage.getItem('cicle_theme_spooky') === 'true';
+    let customBg = localStorage.getItem('cicle_bg') || '';
+    let customBanner = localStorage.getItem('cicle_banner') || '';
+    let customCss = localStorage.getItem('cicle_css') || '';
+
+    let currentCalDate = new Date();
+    let selectedDateStr = todayStr();
+
+    document.getElementById('periodLengthInput').value = periodLength;
+    document.getElementById('medMonthFilter').value = todayStr().slice(0, 7);
+    document.getElementById('themeSelect').value = selectedTheme;
+
+    function toggleDrawer(open) {
+      const drawer = document.getElementById('sideDrawer');
+      const overlay = document.getElementById('drawerOverlay');
+      if (open) {
+        drawer.classList.add('open');
+        overlay.style.display = 'block';
+      } else {
+        drawer.classList.remove('open');
+        overlay.style.display = 'none';
+      }
+    }
+
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+      });
+    }
+
+    async function handleBgUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      try {
+        customBg = await fileToBase64(file);
+        localStorage.setItem('cicle_bg', customBg);
+        applyThemeSettings();
+      } catch (err) { alert('Error al cargar imagen de fondo.'); }
+    }
+
+    function removeCustomBackground() {
+      customBg = '';
+      localStorage.removeItem('cicle_bg');
+      document.getElementById('bgFileInput').value = '';
+      applyThemeSettings();
+    }
+
+    async function handleBannerUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      try {
+        customBanner = await fileToBase64(file);
+        localStorage.setItem('cicle_banner', customBanner);
+        applyThemeSettings();
+      } catch (err) { alert('Error al cargar banner.'); }
+    }
+
+    function resetBannerImage() {
+      customBanner = '';
+      localStorage.removeItem('cicle_banner');
+      document.getElementById('bannerFileInput').value = '';
+      applyThemeSettings();
+    }
+
+    function toggleCssEditor() {
+      const box = document.getElementById('cssEditorBox');
+      const icon = document.getElementById('cssToggleIcon');
+      const isOpen = box.classList.toggle('active');
+      icon.textContent = isOpen ? '▲' : '▼';
+    }
+
+    function saveCustomCss() {
+      customCss = document.getElementById('customCssTextarea').value;
+      localStorage.setItem('cicle_css', customCss);
+      applyThemeSettings();
+      alert('¡CSS aplicado correctamente!');
+    }
+
+    function clearCustomCss() {
+      customCss = '';
+      localStorage.removeItem('cicle_css');
+      document.getElementById('customCssTextarea').value = '';
+      applyThemeSettings();
+    }
+
+    function toggleTheme() { 
+      isDarkMode = !isDarkMode; 
+      if (isDarkMode) selectedTheme = 'oscuro';
+      else if (selectedTheme === 'oscuro') selectedTheme = 'default';
+      document.getElementById('themeSelect').value = selectedTheme;
+      applyThemeSettings(); 
+    }
+
+    function changeThemePreset(val) {
+      selectedTheme = val;
+      isDarkMode = (val === 'oscuro');
+      applyThemeSettings();
+    }
+
+    function toggleSpookyTheme() { isSpookyTheme = !isSpookyTheme; applyThemeSettings(); }
+
+    function resetCustomization() {
+      if (!confirm('¿Restablecer la personalización? Tus registros no se borran.')) return;
+      isDarkMode = false; isSpookyTheme = false; customBg = ''; customBanner = ''; customCss = '';
+      selectedTheme = 'default'; customIcon = ''; iconEmoji = '🦇'; texts = { ...DEF };
+      ['cicle_theme_preset', 'cicle_theme_dark', 'cicle_theme_spooky', 'cicle_bg', 'cicle_banner', 'cicle_css', 'cicle_icon',
+       'cicle_icon_emoji', 'cicle_title', 'cicle_heading', 'cicle_subtitle', 'cicle_symptoms_list'].forEach(k => localStorage.removeItem(k));
+      availableSymptoms = [...defaultSymptomsList];
+      $('themeSelect').value = 'default';
+      applyThemeSettings();
+      renderSymptomsChips();
+      toggleDrawer(false);
+    }
+
+    function applyThemeSettings() {
+      const floatingThemeBtn = document.getElementById('floatingThemeBtn');
+      const spookyBtn = document.getElementById('spookyThemeBtn');
+
+      // Limpiar clases de tema previas
+      document.body.classList.remove('theme-rosa', 'theme-menta', 'theme-atardecer', 'theme-oscuro', 'dark-mode');
+
+      if (selectedTheme !== 'default') {
+        document.body.classList.add(`theme-${selectedTheme}`);
+      }
+
+      if (isDarkMode || selectedTheme === 'oscuro') {
+        document.body.classList.add('dark-mode');
+        floatingThemeBtn.textContent = '☀️';
+      } else {
+        floatingThemeBtn.textContent = '🌙';
+      }
+
+      if (isSpookyTheme) {
+        document.body.classList.add('spooky-theme');
+        spookyBtn.textContent = '🦇 Desactivar Spooky';
+      } else {
+        document.body.classList.remove('spooky-theme');
+        spookyBtn.textContent = '🎃 Activar Modo Spooky';
+      }
+
+      if (customBg) {
+        document.body.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, ${isDarkMode ? 0.75 : 0.4}), rgba(0, 0, 0, ${isDarkMode ? 0.75 : 0.4})), url('${customBg}')`;
+      } else {
+        document.body.style.backgroundImage = 'none';
+      }
+
+      const bImg = document.getElementById('customBannerImg');
+      if (customBanner) { bImg.src = customBanner; bImg.style.display = ''; $('bannerPh').style.display = 'none'; }
+      else { bImg.removeAttribute('src'); bImg.style.display = 'none'; $('bannerPh').style.display = ''; }
+      document.getElementById('customUserSkinStyle').textContent = customCss;
+      document.getElementById('customCssTextarea').value = customCss;
+
+      localStorage.setItem('cicle_theme_preset', selectedTheme);
+      localStorage.setItem('cicle_theme_dark', isDarkMode);
+      localStorage.setItem('cicle_theme_spooky', isSpookyTheme);
+      paintExtras();
+    }
+
+    function updateCycleSettings() {
+      periodLength = Number(document.getElementById('periodLengthInput').value) || 5;
+      localStorage.setItem('cicle_period_length', periodLength);
+      renderCalendar();
+      updateMetrics();
+    }
+
+    // --- FUNCIONES DE SÍNTOMAS (AGREGAR, EDITAR, QUITAR) ---
+    function renderSymptomsChips() {
+      const container = document.getElementById('symptomsChips');
+      container.innerHTML = '';
+      
+      const currentLog = logs[selectedDateStr] || {};
+      const activeSymptoms = currentLog.symptoms || [];
+
+      availableSymptoms.forEach((symptom, index) => {
+        const chip = document.createElement('div');
+        chip.className = 'chip';
+        if (activeSymptoms.includes(symptom)) {
+          chip.classList.add('selected');
+        }
+
+        const labelSpan = document.createElement('span');
+        labelSpan.textContent = symptom;
+        chip.appendChild(labelSpan);
+
+        // Botón para eliminar síntoma
+        const removeBtn = document.createElement('span');
+        removeBtn.className = 'chip-remove';
+        removeBtn.textContent = '×';
+        removeBtn.title = 'Eliminar opción de síntoma';
+        removeBtn.onclick = (e) => {
+          e.stopPropagation();
+          removeSymptomOption(index);
+        };
+        chip.appendChild(removeBtn);
+
+        // Toggle selección al hacer clic en la chip
+        chip.onclick = () => chip.classList.toggle('selected');
+
+        // Doble clic para editar/modificar el nombre del síntoma
+        chip.ondblclick = (e) => {
+          e.stopPropagation();
+          editSymptomOption(index);
+        };
+
+        container.appendChild(chip);
+      });
+    }
+
+    function addNewSymptom() {
+      const input = document.getElementById('newSymptomInput');
+      const val = input.value.trim();
+      if (!val) return;
+
+      if (!availableSymptoms.includes(val)) {
+        availableSymptoms.push(val);
+        localStorage.setItem('cicle_symptoms_list', JSON.stringify(availableSymptoms));
+        renderSymptomsChips();
+        input.value = '';
+      } else {
+        alert('Este síntoma ya existe en la lista.');
+      }
+    }
+
+    function editSymptomOption(index) {
+      const currentName = availableSymptoms[index];
+      const newName = prompt('Modificar nombre del síntoma:', currentName);
+      if (newName && newName.trim() !== '' && newName !== currentName) {
+        availableSymptoms[index] = newName.trim();
+        localStorage.setItem('cicle_symptoms_list', JSON.stringify(availableSymptoms));
+        
+        // Actualizar el historial para que mantenga coherencia si el síntoma fue editado
+        Object.keys(logs).forEach(dateKey => {
+          if (logs[dateKey].symptoms) {
+            logs[dateKey].symptoms = logs[dateKey].symptoms.map(s => s === currentName ? newName.trim() : s);
+          }
+        });
+        localStorage.setItem('cicle_logs_v2', JSON.stringify(logs));
+
+        renderSymptomsChips();
+      }
+    }
+
+    function removeSymptomOption(index) {
+      const nameToRemove = availableSymptoms[index];
+      if (confirm(`¿Eliminar "${nameToRemove}" de la lista de síntomas?`)) {
+        availableSymptoms.splice(index, 1);
+        localStorage.setItem('cicle_symptoms_list', JSON.stringify(availableSymptoms));
+        renderSymptomsChips();
+      }
+    }
+
+    // --- CÁLCULO PROMEDIO Y PREDICCIÓN ---
+    function getPeriodStartDates() {
+      const dates = Object.keys(logs).filter(d => logs[d].flowBleeding && logs[d].flowBleeding !== 'none' && logs[d].flowBleeding !== 'spotting').sort();
+      const startDates = [];
+      let lastDate = null;
+
+      dates.forEach(dStr => {
+        const currentDate = new Date(dStr + 'T00:00:00');
+        if (!lastDate || dayDiff(currentDate, lastDate) > 10) {
+          startDates.push(currentDate);
+        }
+        lastDate = currentDate;
+      });
+
+      return startDates;
+    }
+
+    function calculateAverageCycleLength() {
+      const startDates = getPeriodStartDates();
+      if (startDates.length < 2) return 28;
+
+      let totalDays = 0;
+      for (let i = 1; i < startDates.length; i++) {
+        totalDays += dayDiff(startDates[i], startDates[i - 1]);
+      }
+      return Math.round(totalDays / (startDates.length - 1));
+    }
+
+    function getPredictedPeriodDates() {
+      const startDates = getPeriodStartDates();
+      if (startDates.length === 0) return [];
+
+      const avgCycle = calculateAverageCycleLength();
+      const lastStart = startDates[startDates.length - 1];
+
+      const predictedSet = new Set();
+      let nextStart = new Date(lastStart);
+      for (let cycle = 0; cycle < 3; cycle++) {
+        nextStart = addDays(nextStart, avgCycle);
+        for (let day = 0; day < periodLength; day++) predictedSet.add(ymd(addDays(nextStart, day)));
+      }
+      return Array.from(predictedSet);
+    }
+
+    // --- CALENDARIO ---
+    function changeMonth(delta) {
+      currentCalDate.setMonth(currentCalDate.getMonth() + delta);
+      renderCalendar();
+    }
+
+    function toggleQuickPeriod(dateStr, event) {
+      event.stopPropagation();
+      if (!logs[dateStr]) logs[dateStr] = {};
+      
+      if (logs[dateStr].flowBleeding && logs[dateStr].flowBleeding !== 'none') {
+        logs[dateStr].flowBleeding = 'none';
+      } else {
+        logs[dateStr].flowBleeding = 'medium';
+      }
+
+      localStorage.setItem('cicle_logs_v2', JSON.stringify(logs));
+      renderCalendar();
+      updateMetrics();
+    }
+
+    function renderCalendar() {
+      const year = currentCalDate.getFullYear();
+      const month = currentCalDate.getMonth();
+
+      const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+      document.getElementById('currentMonthYearLabel').textContent = `${monthNames[month]} ${year}`;
+
+      const calGrid = document.getElementById('calendarGrid');
+      calGrid.innerHTML = '';
+
+      const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+      dayNames.forEach(dn => {
+        const dnEl = document.createElement('div');
+        dnEl.className = 'cal-day-name';
+        dnEl.textContent = dn;
+        calGrid.appendChild(dnEl);
+      });
+
+      const firstDayIndex = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const predictedDates = getPredictedPeriodDates();
+
+      for (let i = 0; i < firstDayIndex; i++) {
+        const empty = document.createElement('div');
+        empty.className = 'cal-cell empty';
+        calGrid.appendChild(empty);
+      }
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const cell = document.createElement('div');
+        cell.className = 'cal-cell';
+
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        const dayLog = logs[dateStr];
+
+        const isPeriod = dayLog && dayLog.flowBleeding && dayLog.flowBleeding !== 'none';
+        if (isPeriod) {
+          cell.classList.add('is-period');
+        } else if (predictedDates.includes(dateStr)) {
+          cell.classList.add('is-predicted');
+        }
+
+        if (dayLog && (dayLog.symptoms?.length > 0 || dayLog.painLocations?.length > 0 || dayLog.notes || dayLog.fluidType || dayLog.energyLevel)) {
+          cell.classList.add('has-log');
+        }
+
+        cell.innerHTML = `
+          <span>${d}</span>
+          <button class="quick-period-btn" onclick="toggleQuickPeriod('${dateStr}', event)">
+            ${isPeriod ? '🩸 Periodo' : '+ Periodo'}
+          </button>
+        `;
+
+        cell.onclick = () => selectDateForLog(dateStr);
+        calGrid.appendChild(cell);
+      }
+    }
+
+    // --- REGISTRO DIARIO Y DOLOR ---
+    function addPainLocation(initialData = { level: 5, area: 'Vientre bajo', type: 'Cólico punzante' }) {
+      const container = document.getElementById('painLocationsContainer');
+      const div = document.createElement('div');
+      div.className = 'pain-location-card';
+      div.innerHTML = `
+        <div class="form-row">
+          <div class="form-group">
+            <label>Zona de Dolor</label>
+            <select class="pain-area">
+              <option value="Vientre bajo" ${initialData.area==='Vientre bajo'?'selected':''}>Vientre bajo</option>
+              <option value="Espalda baja" ${initialData.area==='Espalda baja'?'selected':''}>Espalda baja</option>
+              <option value="Pelvis" ${initialData.area==='Pelvis'?'selected':''}>Pelvis</option>
+              <option value="Ovarios" ${initialData.area==='Ovarios'?'selected':''}>Ovarios</option>
+              <option value="Piernas / Ciática" ${initialData.area==='Piernas / Ciática'?'selected':''}>Piernas / Ciática</option>
+              <option value="Cabeza" ${initialData.area==='Cabeza'?'selected':''}>Cabeza</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Intensidad (1 al 10)</label>
+            <input type="number" class="pain-level" min="1" max="10" value="${Number(initialData.level) || 5}">
+          </div>
+        </div>
+        <div class="form-group" style="margin-top: 6px;">
+          <label>Sensación / Tipo de Dolor</label>
+          <select class="pain-type">
+            <option value="Cólico punzante" ${initialData.type==='Cólico punzante'?'selected':''}>Cólico punzante</option>
+            <option value="Dolor sordo / Constante" ${initialData.type==='Dolor sordo / Constante'?'selected':''}>Dolor constante / Sordo</option>
+            <option value="Pinchazos agudos" ${initialData.type==='Pinchazos agudos'?'selected':''}>Pinchazos agudos</option>
+            <option value="Ardor / Inflamación" ${initialData.type==='Ardor / Inflamación'?'selected':''}>Sensación de ardor / inflamación</option>
+            <option value="Opresión / Pesadez" ${initialData.type==='Opresión / Pesadez'?'selected':''}>Opresión o pesadez</option>
+          </select>
+        </div>
+        <button type="button" class="btn-secondary" style="margin-top: 6px; font-size: 0.75rem; color: #e57373;" onclick="this.parentElement.remove()">Eliminar esta zona</button>
+      `;
+      container.appendChild(div);
+    }
+
+    function selectDateForLog(dateStr) {
+      selectedDateStr = dateStr;
+      document.getElementById('logDate').value = dateStr;
+      document.getElementById('selectedDateLabel').textContent = dateStr;
+
+      const log = logs[dateStr] || {};
+      document.getElementById('flowBleeding').value = log.flowBleeding || '';
+      document.getElementById('fluidType').value = log.fluidType || '';
+      document.getElementById('energyLevel').value = log.energyLevel || '';
+      document.getElementById('moodState').value = log.moodState || '';
+      document.getElementById('logNotes').value = log.notes || '';
+
+      renderSymptomsChips();
+
+      const painContainer = document.getElementById('painLocationsContainer');
+      painContainer.innerHTML = '';
+      if (log.painLocations && log.painLocations.length > 0) {
+        log.painLocations.forEach(p => addPainLocation(p));
+      }
+
+      document.getElementById('logSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    document.getElementById('dailyLogForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const dateStr = document.getElementById('logDate').value || selectedDateStr;
+
+      const selectedSymptoms = [];
+      document.querySelectorAll('#symptomsChips .chip.selected').forEach(c => {
+        selectedSymptoms.push(c.querySelector('span').textContent);
+      });
+
+      const painLocations = [];
+      document.querySelectorAll('#painLocationsContainer .pain-location-card').forEach(card => {
+        painLocations.push({
+          area: card.querySelector('.pain-area').value,
+          level: Number(card.querySelector('.pain-level').value),
+          type: card.querySelector('.pain-type').value
+        });
+      });
+
+      logs[dateStr] = {
+        flowBleeding: document.getElementById('flowBleeding').value,
+        fluidType: document.getElementById('fluidType').value,
+        energyLevel: document.getElementById('energyLevel').value,
+        moodState: document.getElementById('moodState').value,
+        notes: document.getElementById('logNotes').value,
+        symptoms: selectedSymptoms,
+        painLocations: painLocations
+      };
+
+      localStorage.setItem('cicle_logs_v2', JSON.stringify(logs));
+      renderCalendar();
+      updateMetrics();
+      alert(`¡Registro guardado para el ${dateStr}!`);
+    });
+
+    // --- MEDICAMENTOS Y RESUMEN MENSUAL ---
+    document.getElementById('medForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('medName').value;
+      const dose = document.getElementById('medDose').value;
+      const time = document.getElementById('medTime').value;
+      const interval = Number(document.getElementById('medInterval').value);
+      
+      // Corrección de fecha local para evitar el desfase por UTC
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const date = `${year}-${month}-${day}`;
+
+      medLogs.push({ name, dose, time, interval, date });
+      localStorage.setItem('cicle_meds_v2', JSON.stringify(medLogs));
+      updateMedStatus();
+      renderMedSummary();
+      alert(`Toma registrada: ${name} ${dose}mg a las ${time}`);
+    });
+
+    function updateMedStatus() {
+      const box = document.getElementById('nextDoseText');
+      const now = new Date();
+      const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+      const todayLogs = medLogs.filter(m => m.date === today);
+
+      if (todayLogs.length === 0) {
+        box.textContent = 'Sin tomas registradas hoy.';
+        return;
+      }
+
+      const last = todayLogs[todayLogs.length - 1];
+      const [h, m] = last.time.split(':').map(Number);
+      const nextH = (h + last.interval) % 24;
+      const nextTimeStr = `${String(nextH).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+
+      box.innerHTML = `
+        Última toma hoy: <strong>${esc(last.name)} ${esc(last.dose)}mg</strong> a las ${esc(last.time)}<br>
+        ⏰ Próxima toma sugerida: <strong>~${nextTimeStr} hrs</strong> (cada ${Number(last.interval) || 0}h)
+      `;
+    }
+
+    function renderMedSummary() {
+      const selectedMonth = document.getElementById('medMonthFilter').value;
+      const container = document.getElementById('medSummaryContainer');
+      container.innerHTML = '';
+
+      if (!selectedMonth) return;
+
+      const filtered = medLogs.filter(m => m.date && m.date.startsWith(selectedMonth));
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<p style="color: var(--muted); font-size: 0.9rem;">No hay tomas registradas en este mes.</p>';
+        return;
+      }
+
+      filtered.slice().reverse().forEach(m => {
+        const item = document.createElement('div');
+        item.className = 'med-summary-item';
+        item.innerHTML = `
+          <div>
+            <strong>${esc(m.name)} ${esc(m.dose)}mg</strong><br>
+            <span style="font-size: 0.8rem; color: var(--muted);">${esc(m.date)} a las ${esc(m.time)} hrs (Intervalo: ${Number(m.interval) || 0}h)</span>
+          </div>
+          <button class="btn-secondary" style="font-size: 0.75rem; color: #e57373;" onclick="deleteMedLog('${String(m.date).replace(/[^0-9-]/g, '')}', '${String(m.time).replace(/[^0-9:]/g, '')}')">Eliminar</button>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function deleteMedLog(date, time) {
+      medLogs = medLogs.filter(m => !(m.date === date && m.time === time));
+      localStorage.setItem('cicle_meds_v2', JSON.stringify(medLogs));
+      updateMedStatus();
+      renderMedSummary();
+    }
+
+    function updateMetrics() {
+      const avgCycle = calculateAverageCycleLength();
+      document.getElementById('avgCycleSpan').textContent = `${avgCycle} días`;
+      document.getElementById('periodLengthSpan').textContent = `${periodLength} días`;
+
+      const startDates = getPeriodStartDates();
+      if (startDates.length > 0) {
+        const lastStart = startDates[startDates.length - 1];
+        document.getElementById('nextPeriodSpan').textContent = ymd(addDays(lastStart, avgCycle));
+      } else {
+        document.getElementById('nextPeriodSpan').textContent = 'Registra un periodo';
+      }
+    }
+
+    // --- REPORTE PARA CONSULTA (vista dentro de la app) ---
+    const FLOW = { spotting: 'Manchado', light: 'Ligero', medium: 'Moderado', heavy: 'Abundante' };
+    const FLOW_RANK = { spotting: 1, light: 2, medium: 3, heavy: 4 };
+    const fmtD = x => x ? x.split('-').reverse().join('/') : '—';
+    function openReport() { toggleDrawer(false); $('reportView').classList.add('open'); renderReport(); }
+    function closeReport() { $('reportView').classList.remove('open'); }
+
+    function renderReport() {
+      const months = Number($('rvRange').value), n = new Date(), today = todayStr();
+      const from = months ? ymd(new Date(n.getFullYear(), n.getMonth() - months, n.getDate())) : '';
+      const inR = d => (!from || d >= from) && d <= today;
+      const days = Object.keys(logs).filter(inR).sort();
+
+      const starts = getPeriodStartDates();
+      const cycles = starts.map((st, i) => {
+        const sStr = ymd(st), next = starts[i + 1], nStr = next ? ymd(next) : null;
+        const keys = Object.keys(logs).filter(d => d >= sStr && (!nStr || d < nStr) && logs[d].flowBleeding && !['none', 'spotting'].includes(logs[d].flowBleeding));
+        let max = '';
+        keys.forEach(d => { const f = logs[d].flowBleeding; if ((FLOW_RANK[f] || 0) > (FLOW_RANK[max] || 0)) max = f; });
+        return { start: sStr, len: next ? dayDiff(next, st) : null, bleed: keys.length, max };
+      }).filter(c => inR(c.start));
+
+      const lens = cycles.filter(c => c.len !== null).map(c => c.len);
+      const bleeds = cycles.filter(c => c.len !== null && c.bleed > 0).map(c => c.bleed);
+      const mean = a => Math.round(a.reduce((x, y) => x + y, 0) / a.length);
+      const insuf = 'Datos insuficientes';
+      const avgTxt = lens.length ? `${mean(lens)} días (${lens.length} ciclo${lens.length > 1 ? 's' : ''})` : insuf;
+      const rangeCyc = lens.length ? `${Math.min(...lens)}–${Math.max(...lens)} días` : insuf;
+      const bleedTxt = bleeds.length ? `${mean(bleeds)} días` : insuf;
+      const lastStart = starts.length ? fmtD(ymd(starts[starts.length - 1])) : '—';
+      const spot = days.filter(d => logs[d].flowBleeding === 'spotting').length;
+
+      const symC = {}, pain = {};
+      days.forEach(d => {
+        (logs[d].symptoms || []).forEach(x => { symC[x] = (symC[x] || 0) + 1; });
+        (logs[d].painLocations || []).forEach(p => {
+          const a = pain[p.area] = pain[p.area] || { n: 0, sum: 0, max: 0, types: {} };
+          const lv = Number(p.level) || 0;
+          a.n++; a.sum += lv; a.max = Math.max(a.max, lv);
+          if (p.type) a.types[p.type] = (a.types[p.type] || 0) + 1;
+        });
+      });
+      const li = h => `<li>${h}</li>`;
+      const symList = Object.entries(symC).sort((a, b) => b[1] - a[1]).map(([k, c]) => li(`<b>${esc(k)}:</b> ${c} de ${days.length} días con registro`)).join('') || li('Sin síntomas registrados en este rango.');
+      const painList = Object.entries(pain).sort((a, b) => b[1].n - a[1].n).map(([k, p]) => {
+        const t = Object.entries(p.types).sort((x, y) => y[1] - x[1]).slice(0, 3).map(x => esc(x[0])).join(', ');
+        return li(`<b>${esc(k)}:</b> ${p.n} registro(s); intensidad promedio ${(p.sum / p.n).toFixed(1)}/10, máxima ${p.max}/10${t ? '; tipo: ' + t : ''}`);
+      }).join('') || li('Sin episodios de dolor registrados en este rango.');
+      const cycRows = cycles.length ? cycles.slice().reverse().map(c =>
+        `<tr><td>${fmtD(c.start)}</td><td>${c.len === null ? 'En curso / sin cierre' : c.len + ' días'}</td><td>${c.bleed || '—'}</td><td>${FLOW[c.max] || '—'}</td></tr>`).join('')
+        : '<tr><td colspan="4" class="c">Sin periodos registrados en este rango.</td></tr>';
+
+      const meds = medLogs.filter(m => inR(m.date)).slice().sort((a, b) => (b.date + b.time).localeCompare(a.date + a.time));
+      const medG = {};
+      meds.forEach(m => { const g = medG[m.name] = medG[m.name] || { n: 0, d: new Set() }; g.n++; g.d.add(m.dose); });
+      const medList = Object.entries(medG).map(([k, g]) => li(`<b>${esc(k)}:</b> ${g.n} toma(s); dosis: ${[...g.d].map(x => esc(x) + ' mg').join(', ')}`)).join('') || li('Sin tomas registradas en este rango.');
+      const medRows = meds.length ? meds.map(m => `<tr><td>${fmtD(m.date)}</td><td>${esc(m.name)}</td><td>${esc(m.dose)} mg</td><td>${esc(m.time)} hrs</td><td>Cada ${Number(m.interval) || 0} h</td></tr>`).join('')
+        : '<tr><td colspan="5" class="c">Sin tomas registradas.</td></tr>';
+
+      let notes = '';
+      if ($('rvNotes').checked) {
+        const nl = days.filter(d => (logs[d].notes || '').trim()).map(d => li(`<b>${fmtD(d)}:</b> ${esc(logs[d].notes.trim())}`)).join('');
+        notes = `<h2>6. Notas diarias</h2><ul>${nl || li('Sin notas en este rango.')}</ul>`;
+      }
+      const name = $('rvName').value.trim(), reason = $('rvReason').value.trim();
+      const rangeTxt = from ? `${fmtD(from)} al ${fmtD(today)}` : `Todo el historial hasta ${fmtD(today)}`;
+
+      $('rvBody').innerHTML = `
+        <h1>Resumen de seguimiento menstrual (autoregistro)</h1>
+        <div class="meta">Generado el ${fmtD(today)} · Rango: ${rangeTxt}${name ? ' · ' + esc(name) : ''}</div>
+        ${reason ? `<p class="meta"><b>Motivo de consulta:</b> ${esc(reason)}</p>` : ''}
+        <h2>1. Resumen</h2>
+        <div class="grid">
+          <div class="sc"><b>Último inicio de periodo</b><span>${lastStart}</span></div>
+          <div class="sc"><b>Periodos en el rango</b><span>${cycles.length}</span></div>
+          <div class="sc"><b>Duración promedio del ciclo</b><span>${avgTxt}</span></div>
+          <div class="sc"><b>Rango del ciclo (mín–máx)</b><span>${rangeCyc}</span></div>
+          <div class="sc"><b>Sangrado promedio (registrado)</b><span>${bleedTxt}</span></div>
+          <div class="sc"><b>Días con manchado</b><span>${spot}</span></div>
+        </div>
+        <h2>2. Ciclos registrados</h2>
+        <table><thead><tr><th>Inicio</th><th>Duración del ciclo</th><th>Días de sangrado</th><th>Flujo máximo</th></tr></thead><tbody>${cycRows}</tbody></table>
+        <h2>3. Síntomas</h2><ul>${symList}</ul>
+        <h2>4. Dolor por zona</h2><ul>${painList}</ul>
+        <h2>5. Medicamentos</h2><ul>${medList}</ul>
+        <table><thead><tr><th>Fecha</th><th>Medicamento</th><th>Dosis</th><th>Hora</th><th>Intervalo</th></tr></thead><tbody>${medRows}</tbody></table>
+        ${notes}
+        <div class="foot">Datos registrados por la propia persona en la app. No constituyen un diagnóstico ni sustituyen una evaluación médica.</div>`;
+    }
+
+    function getBackupPayload() {
+      return {
+        logs, medLogs, periodLength, availableSymptoms,
+        customBg, customBanner, customCss, selectedTheme, isDarkMode, isSpookyTheme,
+        texts, customIcon, iconEmoji, version: '3.0'
+      };
+    }
+
+    function exportData() {
+      const url = URL.createObjectURL(new Blob([JSON.stringify(getBackupPayload(), null, 2)], { type: 'application/json' }));
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Cicle_${todayStr()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function refreshAll() {
+      $('periodLengthInput').value = periodLength;
+      $('themeSelect').value = selectedTheme;
+      applyThemeSettings();
+      renderSymptomsChips();
+      renderCalendar();
+      updateMetrics();
+      updateMedStatus();
+      renderMedSummary();
+      selectDateForLog(selectedDateStr);
+    }
+
+    function importData(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        try {
+          const d = JSON.parse(ev.target.result);
+          if (!d || typeof d.logs !== 'object' || d.logs === null || Array.isArray(d.logs)) throw new Error('formato');
+          if (!confirm('Esto reemplazará tus datos actuales con los del archivo. ¿Continuar?')) return;
+          logs = d.logs;
+          medLogs = Array.isArray(d.medLogs) ? d.medLogs : [];
+          periodLength = Number(d.periodLength) || 5;
+          availableSymptoms = Array.isArray(d.availableSymptoms) && d.availableSymptoms.length ? d.availableSymptoms : [...defaultSymptomsList];
+          selectedTheme = d.selectedTheme || 'default'; isDarkMode = !!d.isDarkMode; isSpookyTheme = !!d.isSpookyTheme;
+          customBg = d.customBg || '';
+          customBanner = d.customBanner && !/^https?:/i.test(d.customBanner) ? d.customBanner : '';
+          customCss = d.customCss || '';
+          customIcon = d.customIcon || ''; iconEmoji = d.iconEmoji || '🦇';
+          texts = { ...DEF, ...(d.texts || {}) };
+          ls('cicle_logs_v2', JSON.stringify(logs)); ls('cicle_meds_v2', JSON.stringify(medLogs));
+          ls('cicle_period_length', periodLength); ls('cicle_symptoms_list', JSON.stringify(availableSymptoms));
+          ls('cicle_bg', customBg); ls('cicle_banner', customBanner); ls('cicle_css', customCss);
+          ls('cicle_icon', customIcon); ls('cicle_icon_emoji', iconEmoji);
+          Object.keys(texts).forEach(k => ls('cicle_' + k, texts[k]));
+          refreshAll();
+          alert('¡Datos importados con éxito!');
+        } catch (err) { alert('Error al leer el archivo JSON.'); }
+      };
+      reader.readAsText(file);
+      e.target.value = '';
+    }
+
+    function openDeleteDataModal() {
+      document.getElementById('deleteDataModal').style.display = 'flex';
+      toggleDrawer(false);
+    }
+
+    function wipeAll() {
+      Object.keys(localStorage).filter(k => k.startsWith('cicle_')).forEach(k => localStorage.removeItem(k));
+      logs = {}; medLogs = []; periodLength = 5; availableSymptoms = [...defaultSymptomsList];
+      selectedTheme = 'default'; isDarkMode = false; isSpookyTheme = false;
+      customBg = ''; customBanner = ''; customCss = ''; customIcon = ''; iconEmoji = '🦇'; texts = { ...DEF }; pinOn = false;
+      refreshAll();
+    }
+
+    function confirmClearAllData() {
+      wipeAll();
+      document.getElementById('deleteDataModal').style.display = 'none';
+    }
+
+    function closeModal(e, modalId) {
+      if (e.target.id === modalId) document.getElementById(modalId).style.display = 'none';
+    }
+
+    // --- TEXTOS, ÍCONO Y PIN ---
+    const DEF = { title: 'Cicle', heading: 'El Regreso', subtitle: 'Otro ciclo menos, fuerza leona.' };
+    let texts = {
+      title: localStorage.getItem('cicle_title') ?? DEF.title,
+      heading: localStorage.getItem('cicle_heading') ?? DEF.heading,
+      subtitle: localStorage.getItem('cicle_subtitle') ?? DEF.subtitle
+    };
+    let customIcon = localStorage.getItem('cicle_icon') || '';
+    let iconEmoji = localStorage.getItem('cicle_icon_emoji') || '🦇';
+    let pinOn = localStorage.getItem('cicle_pin_on') === '1';
+
+    function paintTexts() {
+      const t = texts.title || DEF.title, h = texts.heading || DEF.heading;
+      $('brand').textContent = t; $('lockTitle').textContent = t;
+      $('heading').textContent = h; $('subtitle').textContent = texts.subtitle;
+      document.title = t + ': ' + h;
+    }
+    function saveTexts() {
+      texts = { title: $('tTitle').value, heading: $('tHeading').value, subtitle: $('tSubtitle').value };
+      Object.keys(texts).forEach(k => ls('cicle_' + k, texts[k]));
+      paintTexts();
+    }
+    function resetTexts() {
+      texts = { ...DEF };
+      ['title', 'heading', 'subtitle'].forEach(k => localStorage.removeItem('cicle_' + k));
+      paintExtras();
+    }
+
+    function emojiPng(e) {
+      const c = document.createElement('canvas'); c.width = c.height = 180;
+      const x = c.getContext('2d');
+      x.fillStyle = '#2a1b4e'; x.fillRect(0, 0, 180, 180);
+      x.font = '100px serif'; x.textAlign = 'center'; x.textBaseline = 'middle';
+      x.fillText(e, 90, 98);
+      return c.toDataURL('image/png');
+    }
+    function paintIcon() {
+      const href = customIcon || emojiPng(iconEmoji || '🦇');
+      $('favicon').type = 'image/png'; $('favicon').href = href; $('touchIcon').href = href;
+    }
+    function firstGrapheme(v) {
+      v = (v || '').trim();
+      if (window.Intl && Intl.Segmenter) return [...new Intl.Segmenter().segment(v)][0]?.segment || '';
+      return [...v][0] || '';
+    }
+    function setEmoji(v) {
+      const g = firstGrapheme(v);
+      iconEmoji = g || '🦇';
+      if (g) { ls('cicle_icon_emoji', iconEmoji); customIcon = ''; localStorage.removeItem('cicle_icon'); }
+      paintIcon();
+    }
+    function uploadIcon(e) {
+      const f = e.target.files[0]; if (!f) return;
+      fileToBase64(f).then(data => {
+        const img = new Image();
+        img.onload = () => {
+          const c = document.createElement('canvas'); c.width = c.height = 192;
+          const side = Math.min(img.width, img.height);
+          c.getContext('2d').drawImage(img, (img.width - side) / 2, (img.height - side) / 2, side, side, 0, 0, 192, 192);
+          customIcon = c.toDataURL('image/png'); ls('cicle_icon', customIcon); paintIcon();
+        };
+        img.src = data;
+      }).catch(() => alert('Error al cargar la imagen.'));
+      e.target.value = '';
+    }
+    function clearIcon() { customIcon = ''; localStorage.removeItem('cicle_icon'); paintIcon(); }
+
+    function paintExtras() {
+      $('tTitle').value = texts.title; $('tHeading').value = texts.heading; $('tSubtitle').value = texts.subtitle;
+      $('iconEmoji').value = customIcon ? '' : iconEmoji;
+      paintTexts(); paintIcon();
+      $('pinStatus').textContent = pinOn ? 'PIN activado' : 'PIN desactivado';
+      $('pinToggleBtn').textContent = pinOn ? '🔓 Desactivar PIN' : '🔒 Activar PIN';
+      $('pinChangeBtn').style.display = pinOn ? '' : 'none';
+    }
+
+    // PIN opcional (protege de miradas casuales; no cifra los datos)
+    let pinDone = null, hiddenAt = 0;
+    async function hashPin(pin, salt) {
+      const str = salt + ':' + pin;
+      if (window.crypto && crypto.subtle) {
+        const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+        return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
+      }
+      let h = 5381; for (let i = 0; i < str.length; i++) h = ((h << 5) + h + str.charCodeAt(i)) | 0;
+      return 'f' + h;
+    }
+    function askPin(title) {
+      return new Promise(res => {
+        $('pinTitle').textContent = title; $('pinInput').value = ''; $('pinModal').style.display = 'flex'; $('pinInput').focus();
+        pinDone = v => { $('pinModal').style.display = 'none'; pinDone = null; res(v); };
+      });
+    }
+    const pinOk = () => pinDone && pinDone($('pinInput').value.trim());
+    const pinCancel = () => pinDone && pinDone(null);
+    async function pinMatches(pin) {
+      return (await hashPin(pin, localStorage.getItem('cicle_pin_salt') || '')) === localStorage.getItem('cicle_pin_hash');
+    }
+    async function newPin() {
+      const p1 = await askPin('Crea un PIN de 4 a 6 dígitos'); if (p1 === null) return;
+      if (!/^\d{4,6}$/.test(p1)) return alert('El PIN debe tener de 4 a 6 números.');
+      const p2 = await askPin('Repite el PIN'); if (p2 === null) return;
+      if (p1 !== p2) return alert('Los PIN no coinciden.');
+      const salt = Math.random().toString(36).slice(2) + Date.now().toString(36);
+      ls('cicle_pin_salt', salt); ls('cicle_pin_hash', await hashPin(p1, salt)); ls('cicle_pin_on', '1');
+      pinOn = true; paintExtras();
+      alert('PIN guardado. Te recomiendo exportar un respaldo JSON por si lo olvidas.');
+    }
+    async function togglePin() {
+      if (!pinOn) return newPin();
+      const p = await askPin('PIN actual para desactivarlo'); if (p === null) return;
+      if (!(await pinMatches(p))) return alert('PIN incorrecto.');
+      ['cicle_pin_on', 'cicle_pin_hash', 'cicle_pin_salt'].forEach(k => localStorage.removeItem(k));
+      pinOn = false; paintExtras();
+    }
+    async function changePin() {
+      const p = await askPin('PIN actual'); if (p === null) return;
+      if (!(await pinMatches(p))) return alert('PIN incorrecto.');
+      await newPin();
+    }
+    function lockApp() {
+      if (!pinOn) return;
+      document.documentElement.classList.add('locked');
+      $('lockInput').value = ''; $('lockMsg').textContent = '';
+      setTimeout(() => $('lockInput').focus(), 50);
+    }
+    async function tryUnlock() {
+      if (await pinMatches($('lockInput').value.trim())) { document.documentElement.classList.remove('locked'); $('lockInput').value = ''; }
+      else { $('lockMsg').textContent = 'PIN incorrecto'; $('lockInput').value = ''; }
+    }
+    function forgotPin() {
+      if (confirm('Si olvidaste el PIN, la única opción es borrar todos los datos de Cicle de este navegador (después puedes restaurar un respaldo JSON). ¿Borrar todo?')) {
+        wipeAll(); document.documentElement.classList.remove('locked');
+      }
+    }
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) hiddenAt = Date.now();
+      else if (pinOn && hiddenAt && Date.now() - hiddenAt > 60000) lockApp();
+    });
+
+    // Inicialización de la App
+    selectDateForLog(selectedDateStr);
+    applyThemeSettings();
+    renderCalendar();
+    updateMetrics();
+    updateMedStatus();
+    renderMedSummary();
+    if (pinOn) lockApp();
+    if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+  </script>
+</body>
+</html>
